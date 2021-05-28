@@ -1,6 +1,7 @@
 #run sample
 #export Image_name=localhost:5000/cuda11.1-runtime-ubuntu20.04-conda:2104 
 #docker build --no-cache -t $Image_name -f ./Dockerfile .
+#docker build --no-cache --build-arg From_docker_image_arg=nvidia/cuda:10.2-runtime-ubuntu18.04  -t localhost:5000/cuda10.2-runtime-ubuntu18.04-conda:2104 -f ./Dockerfile .
 #docker build --no-cache -t test/test:latest -t test/test:1.0.0 -f ./Dockerfile
 #docker build --no-cache -t rep/name:tag .
 #export container_name=test_cont
@@ -10,7 +11,13 @@
 # refer docker hub 
 # pull base image
 #FROM nvidia/cuda:10.2-base-ubuntu18.04
-FROM nvidia/cuda:11.1-runtime-ubuntu20.04
+#FROM nvidia/cuda:11.1-runtime-ubuntu20.04
+
+#this image_arg may be over-written by --build-arg
+ARG From_docker_image_arg=nvidia/cuda:11.1-runtime-ubuntu20.04
+
+FROM ${From_docker_image_arg:-nvidia/cuda:11.1-runtime-ubuntu20.04}
+RUN echo "From =${From_docker_image_arg:-nvidia/cuda:11.1-runtime-ubuntu20.04}"
 ENV LC_ALL=C.UTF-8
 
 # install basic utilities
